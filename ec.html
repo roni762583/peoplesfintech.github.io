@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html>
+    <!-- 2020-04-22 -->
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        
+        <meta name="description" content="Peoples FinTech makers of Quant Workstation - advanced algorithmic trading platform & strategy development studio"/>
+        <meta name="author" content="Peoples FinTech"/>
+        <meta name="keywords" content="algorithmic trading, automated quantitative trading, strategies, backtest, modeling, algorithmic trading, quantitative trading, systematic trading, event stream processing, CEP, quant, machine learning, risk, forex"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Expectancy 0.6</title>
+    	
+    	<!-- <script src="js/jquery-3.2.1.min.js"></script> -->
+    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    	<script src="/js/Chart.bundle.js"></script>
+        <script src="js/jspdf.min.js"></script> 
+        <script src="/js/utils.js"></script>
+        <script src="/js/chartjs-plugin-annotation.min.js"></script>
+
+        <!--  Favicon related tags  -->
+        <link rel="apple-touch-icon" sizes="57x57" href="/img/favicons/apple-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="/img/favicons/apple-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="/img/favicons/apple-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="/img/favicons/apple-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="/img/favicons/apple-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="/img/favicons/apple-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="/img/favicons/apple-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="/img/favicons/apple-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/img/favicons/apple-icon-180x180.png">
+        <link rel="icon" type="image/png" sizes="192x192"  href="/img/favicons/android-icon-192x192.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/img/favicons/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="/img/favicons/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/img/favicons/favicon-16x16.png">
+        <link rel="manifest" href="/img/favicons/manifest.json">
+        
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="/img/favicons/ms-icon-144x144.png">
+        <meta name="theme-color" content="#ffffff">
+        <!--  Favicon related tags end  -->
+    
+    
+    	<style>
+        	results-graph{
+        		-moz-user-select: none;
+        		-webkit-user-select: none;
+        		-ms-user-select: none;
+        	}
+        	
+        	#byte_content {
+                margin: 5px 0;
+                max-height: 100px;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+            
+            #byte_range { margin-top: 5px; }
+            
+            @-ms-viewport{ width: device-width; }
+            
+            /* below is from two-column layout example on W3Schools*/
+            * {
+                box-sizing: border-box;
+            }
+
+            /* Create two equal columns that floats next to each other */
+            .column {
+              float: left;
+              width: 50%;
+              padding: 10px;
+              /* height: 300px;  Should be removed. Only for demonstration */
+            }
+            
+            /* Clear floats after the columns */
+            .row:after {
+              content: "";
+              display: table;
+              clear: both;
+            }
+            
+            /* for vid bg*/
+            .fullscreen-bg {
+                  position: fixed;
+                  top: 0;
+                
+                  right: 0;
+                
+                  bottom: 0;
+                
+                  left: 0;
+                
+                  overflow: hidden;
+                
+                  z-index: -100;
+                
+                }
+                
+                
+                
+                .fullscreen-bg__video {
+                
+                  position: absolute;
+                
+                  top: 0;
+                
+                  left: 0;
+                
+                  width: 100%;
+                
+                  height: 100%;
+                
+                }
+                
+                
+                
+                @media (min-aspect-ratio: 16/9) {
+                
+                  .fullscreen-bg__video {
+                
+                    height: 300%;
+                
+                    top: -100%;
+                
+                  }
+                
+                }
+                
+                
+                
+                @media (max-aspect-ratio: 16/9) {
+                
+                  .fullscreen-bg__video {
+                
+                    width: 300%;
+                
+                    left: -100%;
+                
+                  }
+                
+                }
+                
+                @media (max-width: 767px) {
+                  .fullscreen-bg {
+                
+                    background: url('../img/videoframe.jpg') center center / cover no-repeat;
+                  }
+                
+                  .fullscreen-bg__video {
+                    display: none;
+                  }
+                }
+
+                body {
+                  margin: 0;
+                  font-family: Arial, Helvetica, sans-serif;
+                }
+                
+                .hero-image {
+                  background-image: url("/w3images/photographer.jpg");
+                  background-color: #cccccc;
+                  height: 500px;
+                  background-position: center;
+                  background-repeat: no-repeat;
+                  background-size: cover;
+                  position: relative;
+                }
+                
+                .hero-text {
+                  text-align: center;
+                  position: absolute;
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                  color: white;
+                }
+</style>	
+</head>
+
+<body>
+    
+    <div id="content">
+        <!--  Video BG 
+        <div class="fullscreen-bg">
+    <video loop muted autoplay playsinline poster="img/videoframe.jpg" class="fullscreen-bg__video">
+        <source src="vids/charts.webm" type="video/webm">
+        <source src="vids/charts.mp4" type="video/mp4">
+        <source src="vvids/charts.ogv" type="video/ogg">
+    </video>
+    -->
+        <h1 style="text-align:center;">Expectancy Calculator</h1>
+        <div  id="demo">  <!--Calculation output will appear here-->
+            <!-- <p id="demo"></p>  -->
+    	</div>
+        	<!-- Chart -->
+            <div style="width:75%;" id="graph-container">
+                <canvas id="results-graph"></canvas>
+                
+            </div>
+        
+    </div> <!--content-->
+        
+        <div class="row">
+            <div class="column"  >
+                <h2>Explanation</h2>
+                
+        <p>The Expectancy Calculator will estimate a strategy's expectancy, or a trader's performance level in terms of expectancy. Expectancy calculated as a moving time window is graphed. The graph tracks expectancy as proxy for performance improvement over time, and strategy stability. A .pdf report of results can be generated for download.
+        </br></br>
+            The risk, R (planned Stop Loss), is estimated as the average loss in the trade dataset. If no losses are present in the data set, expectancy returned is zero since it is based on a risk taken, and the calculation cannot proceed.
+        </br></br>
+            The expectancy is the average profit per trade (based on the total net profit of ALL trades), divided by R.
+            </br></br>
+            Expectancy is the return an investor can expect for a unit invested over many trades.
+        </br></bbr>
+            The data box below contains some comma sample data. To view the graph, just hit 'Calculate'. </br>
+            To calculate expectancy of your data set, hit 'clear data', and either paste in your comma separated data, or hit 'Choose File' to upload a CSV file. After selecting your file, hit 'Read File', then 'Calculate'.
+            </br></br>
+            Expectancy is calculated over a moving window of the last n trades. The window size can be set, however a Window Size below 30 is not recommended.
+            </br></br>
+            A .pdf copy of the results report can be downloaded via the 'PDF' button
+        </br>
+        
+        </br>
+            For a great writeup explaing Expectancy in context by Nathaniel Zbaida: 
+            </br>
+            <a href="https://www.peoplesfintech.com/blog/2019/07/11/peoples-fintech-expectancy-calculator/">https://www.peoplesfintech.com/blog/2019/07/11/peoples-fintech-expectancy-calculator/</a></p>
+        </p>
+            </div>
+            <div class="column">
+                <h2>Controls</h2>
+                    Data: <input type="text" name="data" id="data" value="0.15,0.13,0.2,0.19,0.15,0.44,0.88,0.82,8.12,-36.29,33.26,0.6,0.19,0.65,0.2,0.2,0.41,0.32,0.59,0.46,0.26,0.71,-0.38,-8.32,12.22,0.22,0.22,0.73,0.25,0.16,0.18,0.06,0.23,0.15,-8.37,12.37,-0.02,0.25,0.24,0.07,0.22,0.15,0.12,-8.25,11.32,0.13,1.86,0.18,0.44,0.12,0.27,0.16,0.15,0.27,0.11,-7.93,10.97,0.13,0.2,0.15,0.26,0.18,0.15,0.12,0.07,0.31,0.35,0.24,0.24,0.15,-8.22,11.27,0.26,0.18,0.32,0.15,0.19,-0.04,0.17,0.21,0.6,-2.21,0.22,0.21,0.22,0.19,0.08,0.18,0.22,0.18,-8.53,12.21,0.19,8.42,-37.81,32.62,0.25,0.24,0.31,0.32,0.74,0.1,0.15,0.27,0.14,0.11,-8.18,11.78,0.15,0.22,0.28,0.19,0.24,0.11,0.16,0.18,0.33,0.22,-8.25,11.67,-8.26,10.56,0.21,0.18,0.21,-0.12,0.18,0.18,0.03,0.35,0.01,0.11,0.08,0.04,0.28,2.02,-0.39,-0.46,0.2,0.62,0.25,0.29,0.06,0.16,0.07,0.38,0.16,0.08,0.23,-5.33,3.39,0.14,0.21,0.19,0.18,-8.2,11.46,0.13,0.22,0.15,0.15,0.2,0.42,0.26,0.22,0.18,0.19,0.64,-8.2,12.72,0.17,0.25,0.04,0.21,0.16,0.1,0.17,0.17,-8.19,11.82,0.17,0.4,0.08,0.22,0.3,0.21,0.01,0.19,0.14,0.12,0.24,3.7,6.12,78.62">
+        <button onclick="clearTextbox()">Clear data</button>
+        </br>
+        </br>
+        <!-- <button onclick="selectFile()">Select Data File</button> --> 
+        <h3>Load Comma Separated Values(.csv) File</h3>
+        * File must contain all data in one column comma delimited
+        <input type="file" id="files" name="file" text=".csv"/> <!-- this is the select files button --> 
+    
+        <span class="readBytesButtons">
+            <button>Read File</button>
+        </span>
+        </br></br>
+        &nbsp;
+        Moving Window Size: <input type="number" name="windowSize" id="windowSize" value="30">
+        &nbsp;
+        </br></br>
+        <button onclick="calculate()">Calculate</button>
+        </br></br>
+        <button onclick="javascript:demoFromHTML();">PDF</button>
+        </br></br>
+        <div id="byte_range"></div>
+            <!-- <div id="byte_content"></div> -->
+        </div>
+
+        <div>
+            <span>
+                <!--  Footer  -->
+                <footer id="foot">
+                                <hr class="small"/>
+                                <p class="text-muted">Copyright © Peoples' FinTech 2016-2020</p>
+                </footer>
+            </span>
+        </div>
+
+    <script>
+        var oAllExpFormated; //used to hold calculated o'all expectancy formated string, used in more than one place
+        function demoFromHTML() {
+            var pdf = new jsPDF('l','pt');//),'letter');
+            
+            // source can be HTML-formatted string, or a reference
+            // to an actual DOM element from which the text will be scraped.
+            source = $('#content')[0];
+            
+            //check height to add page as needed
+            //pageHeight= pdf.internal.pageSize.height;
+            // Before adding new content
+            //y = 500 // Height position of new content
+            //if (y >= pageHeight) {
+            //    pdf.addPage();
+            //    y = 0 // Restart height position
+            //}
+            //var x = 0;
+            //pdf.text(x, y, "value");
+            
+            //var canvas = document.getElementById('results-graph');
+            //var dataURL = canvas.toDataURL();
+            //pdf.addImage(dataURL, 'JPEG', 0, 0);
+            //pdf.addImage(dataURL, 0, 320);
+            
+            // we support special element handlers. Register them with jQuery-style 
+            // ID selector for either ID or node name. ("#iAmID", "div", "span" etc.)
+            // There is no support for any other type of selectors 
+            // (class, of compound) at this time.
+            specialElementHandlers = {
+                // element with id of "bypass" - jQuery style selector
+                '#bypassme': function (element, renderer) {
+                    // true = "handled elsewhere, bypass text extraction"
+                    return true
+                }
+            };
+            margins = {
+                top: 80,
+                bottom: 60,
+                left: 40,
+                width: 522
+            };
+            // all coords and widths are in jsPDF instance's declared units
+            // 'inches' in this case
+            pdf.fromHTML(
+            source, // HTML string or DOM elem ref.
+            margins.left, // x coord
+            margins.top, { // y coord
+                'width': margins.width, // max width of content on PDF
+                'elementHandlers': specialElementHandlers
+            },
+        
+            function (dispose) {
+                // dispose: object with X, Y of the last line add to the PDF 
+                //          this allow the insertion of new lines after html
+                pdf.addPage();
+                var canvas = document.getElementById('results-graph');
+                var dataURL = canvas.toDataURL();
+                pdf.addImage(dataURL, 0, 0);
+                
+                if(document.getElementById('files').files[0]) 
+                    fileName = document.getElementById('files').files[0].name;
+                else
+                    fileName = 'dummyData';
+                // remove file extention
+                fileName = fileName.replace(/\.[^/.]+$/, "");
+                fileName += '-Expectancy_Report.pdf';
+                pdf.save(fileName);
+            }, margins);
+        }
+    </script>
+
+        <script>
+            var htmlSpaces = "&nbsp;&nbsp;&nbsp;"
+        
+            var ctx = document.getElementById('results-graph').getContext('2d');
+          
+            var chart = null;
+            
+            var colorNames = Object.keys(window.chartColors);
+        
+            //onload window event 
+            //window.onload = calculate;
+        
+            ///////////  FUNCTIONS  
+            function calculate(){
+                //check data field
+                if(!dataOK()) return;
+                //get data array (already checks for empty field)
+                var dataArr = getDataArray();
+                //ger estimated R (checks for loss trades)
+                var r = getR(dataArr);
+                //get expectancy (checks for zero R)
+                var e = getExpectancy(dataArr, r);
+                //set output html
+                //var fileName = document.getElementById('files').files[0].name;
+                //if file chosen, set fileName
+                if(document.getElementById('files').files[0]) 
+                    fileName = document.getElementById('files').files[0].name;
+                else
+                    fileName = 'Dummy Data';
+                
+                oAllExpFormated = e.toFixed(2);
+                document.getElementById("demo").innerHTML = 
+                "File Name: " + fileName + "<br>" +
+                "Estimated R:" + htmlSpaces + r.toFixed(2) + "<br>" +
+                "O'all Expectancy:" + htmlSpaces + oAllExpFormated + " R" + "<br>";
+                //show graph ;file.toString()
+                updateChart(dataArr, r);
+            }
+            
+            function dataOK(){
+                //fetch data string
+                var dataString = document.getElementsByName('data')[0].value;
+                if(!dataString.length) { //check if string is empty
+                    alert('empty data field!');
+                    return false;
+                }
+                //make an array from data string
+                var arr = dataString.split(',');
+                //check if array is good
+                if (!(arr && arr.length)) return false;
+                //get the negative values (losses)
+                var negTrades = arr.filter(t => t<0);
+                if(!negTrades.length) {
+                    alert('data has no losses, R cannot be estimated;\n\nEnter a value for Risk R:');
+                    return false;
+                }
+                return true;
+            }
+            
+            function getDataArray() {
+                //data field has previously been checked
+                var dataString = document.getElementsByName('data')[0].value;
+                //split data string to make array
+                var arr = dataString.split(',');
+                //clean up any lingering commas, double commas, and non-digits
+                return arr;
+            }
+            
+            function getR(inArr){
+                //receives array, returns estimated R
+                //get loss trades
+                var negTrades = inArr.filter(t => t<0);
+                var estR = 0.0;
+                //console.log("negTrades: "+negTrades);
+                if (!negTrades.length) {
+                   // var sum  = inArr.reduce(function(a, b) { return parseFloat(a) + parseFloat(b); });
+                   // estR = -1*sum/inArr.length;
+                    alert('No loss trades reported\n'+ 'R cannot be estimated!');
+                    return 0;
+                }
+                var sum  = negTrades.reduce(function(a, b) { return parseFloat(a) + parseFloat(b); })
+                //est R as avg. loss
+                estR = (sum/negTrades.length)*-1; //return as pos. val.
+                return estR;
+            }
+            
+            function getExpectancy(inArr, estR){
+                //receives array and estimated R, & returns expectancy
+                if(estR == 0) return 0;
+                var sumAll = inArr.reduce(function(a, b) { return parseFloat(a) + parseFloat(b);});
+                var avgAll = sumAll / inArr.length;
+                var e = avgAll/estR;
+                return e;
+            }
+            
+            function updateChart(dataArr, estR) {
+                //resetCanvas();
+                //$('#results-graph').remove(); // this is my <canvas> element
+                //$('#graph-container').append('<canvas id="results-graph"></canvas>'); 
+                var config = getConfig(dataArr, estR);
+                ctx = document.getElementById('results-graph').getContext('2d');
+                
+                if(chart!=null) {
+                    chart.destroy();
+                }
+                
+                chart = new Chart(ctx, config);
+                
+        	    window.myLine = chart;
+        	    window.myLine.update();
+            }
+            
+            function resetCanvas() {
+                $('#results-graph').remove(); // this is my <canvas> element
+                $('#graph-container').append('<canvas id="results-graph"></canvas>');
+                canvas = document.querySelector('#results-graph');
+                ctx = canvas.getContext('2d');
+                ctx.canvas.width = $('#graph').width(); // resize to parent width
+                ctx.canvas.height = $('#graph').height(); // resize to parent height
+                var x = canvas.width/2;
+                var y = canvas.height/2;
+                ctx.font = '10pt Verdana';
+                ctx.textAlign = 'center';
+                ctx.fillText('This text is centered on the canvas', x, y);
+            }
+        
+            function getLables(inArr){
+                //receives input array and returns string array of labels of length of input array and values 0,1,2,3,4...
+                var lbls = Array.apply(null, Array(inArr.length)).map(function (x, i) { return (i+1).toString(); })
+                return lbls;
+            }
+        
+            function clearTextbox() {
+                //alert('hi from clear');
+                document.getElementsByName('data')[0].value="";
+            }
+            
+            function getMovingWindowExpectancy(ws, inArr, estR){
+                //returns array of expectancies for moving window
+                //ws - window size, inArr - trade data array
+                var movingWindowExpectancy = []; //array for moving window results
+                var sum, avg = 0; //used in moving window calculations below
+                //loop over trades to calculate moving window expectancy
+                for (i = ws; i < inArr.length; i++) { 
+                    //get slice of array as moving window: .slice(2, 4) from inclusive, to exclusive, zero indexed
+                    var windowArr = inArr.slice(i-ws, i);
+                    //calc. expectancy for this window and add to output array
+                    movingWindowExpectancy.push(getExpectancy(windowArr, estR));
+                }//for loop
+                return movingWindowExpectancy;
+            }
+            
+            function getWindowSize(){
+                //get moving window size from user input
+                var ws = parseInt(document.getElementsByName('windowSize')[0].value);
+                return ws;
+            }
+            
+            //get Configuration
+            function getConfig(inArr, estR){
+                //receives trade data array as inArr, reurns chart configuration
+                
+                //get moving window expectancy values array
+                var mwe = getMovingWindowExpectancy(getWindowSize(), inArr, estR);
+                var mwe2 = getMovingWindowExpectancy(100, inArr, estR);
+                var mwe3 = getMovingWindowExpectancy(200, inArr, estR);
+                //shift graphs to right
+                var paddingArr = new Array(mwe.length - mwe2.length).fill(null);
+                mwe2 = paddingArr.concat(mwe2);
+                paddingArr = new Array(mwe.length - mwe3.length).fill(null);
+                mwe3 = paddingArr.concat(mwe3);
+                //get array of proper size for labels //wrong size can break chart functionality
+                var lbls = getLables(mwe);
+                //get o'all expectancy for horiz. line
+                
+              var config = {
+            		type: 'line',
+            		data: {
+            			labels: lbls,
+            			datasets: [{
+            				label: 'Window Size 30',
+            				backgroundColor: window.chartColors.red,
+            				borderColor: window.chartColors.red,
+            				data: mwe,
+            				fill: false,
+            			}, {
+            				label: 'Window Size 100',
+            				fill: false,
+            				backgroundColor: window.chartColors.blue,
+            				borderColor: window.chartColors.blue,
+            				data: mwe2,
+            			}, {
+            				label: 'Window Size 200',
+            				fill: false,
+            				backgroundColor: window.chartColors.green,
+            				borderColor: window.chartColors.green,
+            				data: mwe3,
+            			}, {
+            				label: "O'all Expectancy",
+            				fill: false,
+            				backgroundColor: 'rgb(0, 255, 0)',
+            				borderColor: window.chartColors.blue//,
+            				//data: mwe2,
+            			}]
+            		},
+            		options: {
+            			responsive: true,
+            			title: {
+            				display: true,
+            				text: 'Expectancy Moving Window'
+            			},
+                		annotation: {
+                		    annotations: [{
+                                type: 'line',
+                                mode: 'horizontal',
+                                scaleID: 'y-axis-0',
+                                value: parseFloat(oAllExpFormated),
+                                borderColor: 'rgb(0, 255, 0)',
+                                borderWidth: 4,
+                                label: {
+                                  enabled: false,
+                                  content: 'Test label'
+                                }
+                            }]
+                        },
+            			tooltips: {
+            				//mode: 'index',
+            				//intersect: true,
+            				enabled: false
+            			},
+            			hover: {
+            				mode: 'nearest',
+            				intersect: true
+            			},
+            			scales: {
+            				xAxes: [{
+            					display: true,
+            					scaleLabel: {
+            						display: true,
+            						labelString: 'Trade No.'
+            					}
+            				}],
+            				yAxes: [{
+            					display: true,
+            					scaleLabel: {
+            						display: true,
+            						labelString: 'Expectancy'
+            					}
+            				}]
+            			}
+            		}
+            	};
+            	
+              return config;
+            } // getConfig() end
+            
+            // from: https://www.html5rocks.com/en/tutorials/file/dndfiles/
+            function readBlob(opt_startByte, opt_stopByte) {
+                var files = document.getElementById('files').files;
+                if (!files.length) {
+                    alert('Please select a file!');
+                    return;
+                }
+                var file = files[0]; //made this var global
+                //alert(" file var is "+ document.getElementById('files').files[0].name);
+                var start = parseInt(opt_startByte) || 0;
+                var stop = parseInt(opt_stopByte) || file.size - 1;
+                var reader = new FileReader();
+                // If we use onloadend, we need to check the readyState.
+                reader.onloadend = function(evt) {
+                    if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+                        //document.getElementById('byte_content').textContent = evt.target.result;
+                        document.getElementById('byte_range').textContent = ['Read bytes: ', start + 1, ' - ', stop + 1, ' of ', file.size, ' byte file'].join('');
+                        document.getElementsByName('data')[0].value=evt.target.result;
+                    }
+                };
+            
+                var blob = file.slice(start, stop + 1);
+                reader.readAsBinaryString(blob);
+            }
+            
+            //function to pick file
+            function selectFile() {
+                //alert('hello from selectFile() ');
+                // Check for the various File API support.
+                if (window.File && window.FileReader && window.FileList && window.Blob) {
+                        // Great success! All the File APIs are supported.
+                    } else {
+                        alert('The File APIs are not fully supported in this browser.');
+                    }
+                    
+                
+            }
+            
+            document.querySelector('.readBytesButtons').addEventListener('click', function(evt) {
+                    if (evt.target.tagName.toLowerCase() == 'button') {
+                        var startByte = evt.target.getAttribute('data-startbyte');
+                        var endByte = evt.target.getAttribute('data-endbyte');
+                        readBlob(startByte, endByte);
+                    }
+            }, false);
+        </script>
+    </body>
+</html>
