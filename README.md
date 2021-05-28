@@ -4,6 +4,6 @@ Web based graphing calculator for strategy/trader expectancy - trader education 
 
 The Expectancy Calculator is a trader education tool that estimates a strategie's, or trader's performance expectancy. Expectancy is expected payoff for each unit of value risked. The calculator produces a moving window expectancy calculation and graphs the results.
 
-A great writeup on Expectancy and this calculator by Nathaniel Zbaida can be found here: https://peoplesfintech.wixsite.com/tradingsystemdesignb/post/expectancy-calculator
+A great writeup on Expectancy and this calculator by Nathaniel Zbaida can be found here: https://peoplesfintech.wixsite.com/tradingsystemdesignb/post/expectancy-calculator (a pdf is in this repository)
 
 The Expectancy Calculator page lives here: https://roni762583.github.io/peoplesfintech.github.io/ec.html
