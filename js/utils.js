@@ -1,4 +1,3 @@
-import colorLib from '@kurkle/color';
 import {DateTime} from 'luxon';
 import 'chartjs-adapter-luxon';
 import {valueOrDefault} from '../../dist/helpers.js';
@@ -159,3 +158,5 @@ export function newDateString(days) {
 export function parseISODate(str) {
   return DateTime.fromISO(str);
 }
+
+window.colorLib = colorLib;
